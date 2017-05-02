@@ -34,5 +34,5 @@ with Oasis('test') as o:
     o.enddef()
 
     data = np.zeros(shape, order='F')
-    var.put(0, data)
+    o.variable['foo'].put(0, data)
 

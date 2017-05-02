@@ -19,6 +19,8 @@ limitations under the License.
 
 from mpi4py import MPI
 from .f import oasis as foasis
+from .partition import Partition
+from .variable import Variable
 
 class Oasis(object):
     """
@@ -40,8 +42,8 @@ class Oasis(object):
         Create an Oasis session (singleton)
         """
         self.compid = foasis.init_comp(name)
-        self.partitions = {}
-        self.variables = {}
+        self.partition = {}
+        self.variable = {}
         self._define_phase = True
 
     def terminate(self):
@@ -64,13 +66,11 @@ class Oasis(object):
         """
         if self._define_phase == False:
             raise Exception
-        else:
-            obj._register()
 
         if isinstance(obj, Partition):
-            self.partitions[obj.name] = obj
+            self.partition[obj.name] = obj
         elif isinstance(obj, Variable):
-            self.variables[obj.name] = obj
+            self.variable[obj.name] = obj
 
     def enddef(self):
         """
@@ -78,10 +78,10 @@ class Oasis(object):
 
         Must be called before `Variable.put()` or `Variable.get()`
         """
-        for p in self.partitions.values():
-            p.register()
-        for v in self.variables.values():
-            v.register()
+        for p in self.partition.values():
+            p._register()
+        for v in self.variable.values():
+            v._register()
         err = foasis.enddef()
         self._define_phase = False
 
