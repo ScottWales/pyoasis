@@ -21,11 +21,33 @@ from mpi4py import MPI
 from .f import oasis as foasis
 
 class Oasis(object):
+    """
+    An Oasis coupled model connection
+
+    May be used as a context manager to automatically terminate the coupling::
+
+        with Oasis('atmos') as o:
+            o.register(partition)
+            o.register(grid)
+            o.register(variable)
+
+            variable.put(t, data)
+            variable.get(t, data)
+    """
 
     def __init__(self, name, coupled=True):
+        """
+        Create an Oasis session (singleton)
+        """
         self.compid = foasis.init_comp(name)
+        self.partitions = {}
+        self.variables = {}
+        self._define_phase = True
 
     def terminate(self):
+        """
+        Terminate the Oasis session
+        """
         foasis.terminate()
 
     def __enter__(self):
@@ -33,3 +55,33 @@ class Oasis(object):
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.terminate()
+
+    def register(self, obj):
+        """
+        Register a partition, grid or variable with Oasis
+
+        Must be called before `Oasis.enddef()`
+        """
+        if self._define_phase == False:
+            raise Exception
+        else:
+            obj._register()
+
+        if isinstance(obj, Partition):
+            self.partitions[obj.name] = obj
+        elif isinstance(obj, Variable):
+            self.variables[obj.name] = obj
+
+    def enddef(self):
+        """
+        End the definition phase
+
+        Must be called before `Variable.put()` or `Variable.get()`
+        """
+        for p in self.partitions.values():
+            p.register()
+        for v in self.variables.values():
+            v.register()
+        err = foasis.enddef()
+        self._define_phase = False
+

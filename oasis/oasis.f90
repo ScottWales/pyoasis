@@ -15,13 +15,15 @@
 !! See the License for the specific language governing permissions and
 !! limitations under the License.
 
-module port_status
+module direction
     use mod_oasis_parameters
-    integer, parameter :: notdef = oasis_notdef
-    integer, parameter :: var_uncpl = oasis_var_uncpl
     integer, parameter :: out = oasis_out
     integer, parameter :: in = oasis_in
     integer, parameter :: inout = oasis_inout
+end module
+
+module comm_info
+    use mod_oasis_parameters
     integer, parameter :: recvd = oasis_recvd
     integer, parameter :: sent = oasis_sent
     integer, parameter :: locTrans = oasis_locTrans
@@ -43,6 +45,8 @@ module types
 end module
 
 module oasis
+    use mod_oasis_parameters
+    integer, parameter :: ok = oasis_ok
 contains
 
    SUBROUTINE init_comp(compid,name)
@@ -94,81 +98,96 @@ contains
         call oasis_def_var(var_id, name, il_part_id, var_nodims, kinout, var_actual_shape, var_type, ierror)
     end subroutine
 
-    subroutine put_14(var_id, date, fld1, info, fld2, fld3, fld4, fld5)
+    subroutine enddef(ierror)
+        use mod_oasis
+        implicit none
+        integer, intent(out) :: ierror
+        call oasis_enddef(ierror)
+    end subroutine
+
+    subroutine put_14(var_id, date, fld1, n, info, fld2, fld3, fld4, fld5)
         use mod_oasis
         implicit none
         integer, intent(in) :: var_id
         integer, intent(in) :: date
-        real(kind=4), intent(in) :: fld1(:)
+        real(kind=4), intent(in) :: fld1(n)
+        integer, intent(in) :: n
         integer, intent(out) :: info
-        real(kind=4), intent(in), optional :: fld2(:), fld3(:), fld4(:), fld5(:)
+        real(kind=4), intent(in), optional :: fld2(n), fld3(n), fld4(n), fld5(n)
         call oasis_put(var_id, date, fld1, info, fld2, fld3, fld4, fld5)
     end subroutine
-    subroutine put_18(var_id, date, fld1, info, fld2, fld3, fld4, fld5)
+    subroutine put_18(var_id, date, fld1, n, info, fld2, fld3, fld4, fld5)
         use mod_oasis
         implicit none
         integer, intent(in) :: var_id
         integer, intent(in) :: date
-        real(kind=8), intent(in) :: fld1(:)
+        real(kind=8), intent(in) :: fld1(n)
+        integer, intent(in) :: n
         integer, intent(out) :: info
-        real(kind=8), intent(in), optional :: fld2(:), fld3(:), fld4(:), fld5(:)
+        real(kind=8), intent(in), optional :: fld2(n), fld3(n), fld4(n), fld5(n)
         call oasis_put(var_id, date, fld1, info, fld2, fld3, fld4, fld5)
     end subroutine
-    subroutine put_24(var_id, date, fld1, info, fld2, fld3, fld4, fld5)
+    subroutine put_24(var_id, date, fld1, n, m, info, fld2, fld3, fld4, fld5)
         use mod_oasis
         implicit none
         integer, intent(in) :: var_id
         integer, intent(in) :: date
-        real(kind=4), intent(in) :: fld1(:,:)
+        integer, intent(in) :: n, m
+        real(kind=4), intent(in) :: fld1(n,m)
         integer, intent(out) :: info
-        real(kind=4), intent(in), optional :: fld2(:,:), fld3(:,:), fld4(:,:), fld5(:,:)
+        real(kind=4), intent(in), optional :: fld2(n,m), fld3(n,m), fld4(n,m), fld5(n,m)
         call oasis_put(var_id, date, fld1, info, fld2, fld3, fld4, fld5)
     end subroutine
-    subroutine put_28(var_id, date, fld1, info, fld2, fld3, fld4, fld5)
+    subroutine put_28(var_id, date, fld1, n, m, info, fld2, fld3, fld4, fld5)
         use mod_oasis
         implicit none
         integer, intent(in) :: var_id
         integer, intent(in) :: date
-        real(kind=8), intent(in) :: fld1(:,:)
+        integer, intent(in) :: n, m
+        real(kind=8), intent(in) :: fld1(n,m)
         integer, intent(out) :: info
-        real(kind=8), intent(in), optional :: fld2(:,:), fld3(:,:), fld4(:,:), fld5(:,:)
+        real(kind=8), intent(in), optional :: fld2(n,m), fld3(n,m), fld4(n,m), fld5(n,m)
         call oasis_put(var_id, date, fld1, info, fld2, fld3, fld4, fld5)
     end subroutine
 
-    subroutine get_14(var_id, date, fld, info)
+    subroutine get_14(var_id, date, fld, n, info)
         use mod_oasis
         implicit none
         integer, intent(in) :: var_id
         integer, intent(in) :: date
-        real(kind=4), intent(out) :: fld(:)
+        real(kind=4), intent(inout) :: fld(n)
+        integer, intent(in) :: n
         integer, intent(out) :: info
-        call oasis_put(var_id, date, fld, info)
+        call oasis_get(var_id, date, fld, info)
     end subroutine
-    subroutine get_18(var_id, date, fld, info)
+    subroutine get_18(var_id, date, fld, n, info)
         use mod_oasis
         implicit none
         integer, intent(in) :: var_id
         integer, intent(in) :: date
-        real(kind=8), intent(out) :: fld(:)
+        real(kind=8), intent(inout) :: fld(n)
+        integer, intent(in) :: n
         integer, intent(out) :: info
-        call oasis_put(var_id, date, fld, info)
+        call oasis_get(var_id, date, fld, info)
     end subroutine
-    subroutine get_24(var_id, date, fld, info)
+    subroutine get_24(var_id, date, fld, n, m, info)
         use mod_oasis
         implicit none
         integer, intent(in) :: var_id
         integer, intent(in) :: date
-        real(kind=4), intent(out) :: fld(:,:)
+        real(kind=4), intent(inout) :: fld(n,m)
+        integer, intent(in) :: n, m
         integer, intent(out) :: info
-        call oasis_put(var_id, date, fld, info)
+        call oasis_get(var_id, date, fld, info)
     end subroutine
-    subroutine get_28(var_id, date, fld, info)
+    subroutine get_28(var_id, date, fld, n, m, info)
         use mod_oasis
         implicit none
         integer, intent(in) :: var_id
         integer, intent(in) :: date
-        real(kind=8), intent(out) :: fld(:,:)
+        real(kind=8), intent(inout) :: fld(n,m)
+        integer, intent(in) :: n, m
         integer, intent(out) :: info
-        call oasis_put(var_id, date, fld, info)
+        call oasis_get(var_id, date, fld, info)
     end subroutine
 end module

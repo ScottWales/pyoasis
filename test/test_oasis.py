@@ -17,8 +17,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 from oasis.oasis import Oasis
+import oasis.partition as partition
+from oasis.variable import Variable
+from oasis.f import types, direction
+
+import numpy as np
 
 with Oasis('test') as o:
-    pass
+    shape = (5,5)
 
+    part = partition.Serial('default', shape[0]*shape[1])
+    o.register(part)
+
+    var = Variable('foo', part, shape, types.real, direction.out)
+    o.register(var)
+    o.enddef()
+
+    data = np.zeros(shape, order='F')
+    var.put(0, data)
 
