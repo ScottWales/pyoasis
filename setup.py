@@ -22,8 +22,6 @@ from numpy.distutils.core import setup, Extension
 oasisf = Extension('oasis.f', 
         sources=['oasis/oasis.f90'], 
         libraries=['psmile.MPI1', 'scrip', 'mct', 'mpeu'], 
-        include_dirs=['/home/562/saw562/scratch/access10-kpp/oasis3-mct/install/include'],
-        library_dirs=['/home/562/saw562/scratch/access10-kpp/oasis3-mct/install/lib'],
         extra_f90_compile_args=['-fPIC'])
 
 setup(
