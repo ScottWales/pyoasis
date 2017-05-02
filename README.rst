@@ -59,8 +59,8 @@ Run tests::
 
 Build documentation::
 
-    python setup.py build_sphinx
-    firefox docs/_build/index.html
+    sphinx-apidoc -o doc/api oasis
+    make -C doc html
 
 Upload documentation::
 

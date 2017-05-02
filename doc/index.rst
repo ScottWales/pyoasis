@@ -10,6 +10,7 @@ Welcome to pyoasis's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   api/oasis
 
 
 Indices and tables
