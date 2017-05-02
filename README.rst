@@ -25,14 +25,6 @@ pyoasis
 Install
 -------
 
-Conda install::
-
-    conda install -c ScottWales pyoasis
-
-Pip install (into a virtual environment)::
-
-    pip install pyoasis
-
 ---
 Use
 ---
@@ -45,17 +37,13 @@ Development install::
 
     git checkout https://github.com/ScottWales/pyoasis
     cd pyoasis
-    conda env create -f conda/dev-environment.yml
-    source activate pyoasis-dev
+    source raijin.env
     pip install -e '.[dev]'
-
-The `dev-environment.yml` file is for speeding up installs and installing
-packages unavailable on pypi, `requirements.txt` is the source of truth for
-dependencies.
 
 Run tests::
 
-    py.test
+    cd test
+    mpirun -n 1 test_oasis.py
 
 Build documentation::
 
