@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>oasis package &#8212; pyoasis 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Welcome to pyoasis’s documentation!" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="oasis-package">
+<h1>oasis package<a class="headerlink" href="#oasis-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-oasis.oasis">
+<span id="oasis-oasis-module"></span><h2>oasis.oasis module<a class="headerlink" href="#module-oasis.oasis" title="Permalink to this headline">¶</a></h2>
+<p>Copyright 2017 ARC Centre of Excellence for Climate Systems Science</p>
+<p>author: Scott Wales &lt;<a class="reference external" href="mailto:scott&#46;wales&#37;&#52;&#48;unimelb&#46;edu&#46;au">scott<span>&#46;</span>wales<span>&#64;</span>unimelb<span>&#46;</span>edu<span>&#46;</span>au</a>&gt;</p>
+<p>Licensed under the Apache License, Version 2.0 (the &#8220;License&#8221;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<blockquote>
+<div><a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></div></blockquote>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &#8220;AS IS&#8221; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p>
+<dl class="class">
+<dt id="oasis.oasis.Oasis">
+<em class="property">class </em><code class="descclassname">oasis.oasis.</code><code class="descname">Oasis</code><span class="sig-paren">(</span><em>name</em>, <em>coupled=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/oasis/oasis.html#Oasis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oasis.oasis.Oasis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>An Oasis coupled model connection</p>
+<p>May be used as a context manager to automatically terminate the coupling:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">Oasis</span><span class="p">(</span><span class="s1">&#39;atmos&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">partition</span><span class="p">)</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+    <span class="n">o</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span>
+
+    <span class="n">variable</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="n">variable</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="oasis.oasis.Oasis.enddef">
+<code class="descname">enddef</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/oasis/oasis.html#Oasis.enddef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oasis.oasis.Oasis.enddef" title="Permalink to this definition">¶</a></dt>
+<dd><p>End the definition phase</p>
+<p>Must be called before <cite>Variable.put()</cite> or <cite>Variable.get()</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oasis.oasis.Oasis.register">
+<code class="descname">register</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/oasis/oasis.html#Oasis.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oasis.oasis.Oasis.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a partition, grid or variable with Oasis</p>
+<p>Must be called before <cite>Oasis.enddef()</cite></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="oasis.oasis.Oasis.terminate">
+<code class="descname">terminate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/oasis/oasis.html#Oasis.terminate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oasis.oasis.Oasis.terminate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Terminate the Oasis session</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-oasis.partition">
+<span id="oasis-partition-module"></span><h2>oasis.partition module<a class="headerlink" href="#module-oasis.partition" title="Permalink to this headline">¶</a></h2>
+<p>Copyright 2017 ARC Centre of Excellence for Climate Systems Science</p>
+<p>author: Scott Wales &lt;<a class="reference external" href="mailto:scott&#46;wales&#37;&#52;&#48;unimelb&#46;edu&#46;au">scott<span>&#46;</span>wales<span>&#64;</span>unimelb<span>&#46;</span>edu<span>&#46;</span>au</a>&gt;</p>
+<p>Licensed under the Apache License, Version 2.0 (the &#8220;License&#8221;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<blockquote>
+<div><a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></div></blockquote>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &#8220;AS IS&#8221; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p>
+<dl class="class">
+<dt id="oasis.partition.Apple">
+<em class="property">class </em><code class="descclassname">oasis.partition.</code><code class="descname">Apple</code><span class="sig-paren">(</span><em>name</em>, <em>global_size</em>, <em>local_size</em>, <em>offset</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/oasis/partition.html#Apple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oasis.partition.Apple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#oasis.partition.Partition" title="oasis.partition.Partition"><code class="xref py py-class docutils literal"><span class="pre">oasis.partition.Partition</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="oasis.partition.Partition">
+<em class="property">class </em><code class="descclassname">oasis.partition.</code><code class="descname">Partition</code><span class="sig-paren">(</span><em>name, global_size=0, partition=[0]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/oasis/partition.html#Partition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oasis.partition.Partition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="oasis.partition.Partition.local_size">
+<code class="descname">local_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/oasis/partition.html#Partition.local_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oasis.partition.Partition.local_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="oasis.partition.Serial">
+<em class="property">class </em><code class="descclassname">oasis.partition.</code><code class="descname">Serial</code><span class="sig-paren">(</span><em>name</em>, <em>global_size</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/oasis/partition.html#Serial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oasis.partition.Serial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#oasis.partition.Partition" title="oasis.partition.Partition"><code class="xref py py-class docutils literal"><span class="pre">oasis.partition.Partition</span></code></a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-oasis.variable">
+<span id="oasis-variable-module"></span><h2>oasis.variable module<a class="headerlink" href="#module-oasis.variable" title="Permalink to this headline">¶</a></h2>
+<p>Copyright 2017 ARC Centre of Excellence for Climate Systems Science</p>
+<p>author: Scott Wales &lt;<a class="reference external" href="mailto:scott&#46;wales&#37;&#52;&#48;unimelb&#46;edu&#46;au">scott<span>&#46;</span>wales<span>&#64;</span>unimelb<span>&#46;</span>edu<span>&#46;</span>au</a>&gt;</p>
+<p>Licensed under the Apache License, Version 2.0 (the &#8220;License&#8221;);
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+<blockquote>
+<div><a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></div></blockquote>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &#8220;AS IS&#8221; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p>
+<dl class="class">
+<dt id="oasis.variable.Variable">
+<em class="property">class </em><code class="descclassname">oasis.variable.</code><code class="descname">Variable</code><span class="sig-paren">(</span><em>name</em>, <em>partition</em>, <em>shape</em>, <em>type</em>, <em>inout</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/oasis/variable.html#Variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oasis.variable.Variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/2/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Oasis&#8217; view of a model variable</p>
+<p>Should be registered with the Oasis singleton before calling Oasis.enddef()</p>
+<dl class="method">
+<dt id="oasis.variable.Variable.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>date</em>, <em>array</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/oasis/variable.html#Variable.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oasis.variable.Variable.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get data from the coupler. If there is no coupling at this date
+according to the namcouple file this function will be a no-op.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>date</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Date at the start of the timestep, in seconds since the model start</li>
+<li><strong>array</strong> (<em>numpy.Array</em>) &#8211; Data array to send (1 or 2D)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="oasis.variable.Variable.put">
+<code class="descname">put</code><span class="sig-paren">(</span><em>date</em>, <em>array</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/oasis/variable.html#Variable.put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#oasis.variable.Variable.put" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send data to the coupler. If there is no coupling at this date
+according to the namcouple file this function will be a no-op.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>date</strong> (<a class="reference external" href="https://docs.python.org/2/library/functions.html#int" title="(in Python v2.7)"><em>int</em></a>) &#8211; Date at the start of the timestep, in seconds since the model start</li>
+<li><strong>array</strong> (<em>numpy.Array</em>) &#8211; Data array to send (1 or 2D)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-oasis">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-oasis" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">oasis package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-oasis.oasis">oasis.oasis module</a></li>
+<li><a class="reference internal" href="#module-oasis.partition">oasis.partition module</a></li>
+<li><a class="reference internal" href="#module-oasis.variable">oasis.variable module</a></li>
+<li><a class="reference internal" href="#module-oasis">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Welcome to pyoasis&#8217;s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/oasis.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Scott Wales.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/api/oasis.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

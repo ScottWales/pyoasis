@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>oasis.variable &#8212; pyoasis 0.1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for oasis.variable</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Copyright 2017 ARC Centre of Excellence for Climate Systems Science</span>
+
+<span class="sd">author: Scott Wales &lt;scott.wales@unimelb.edu.au&gt;</span>
+
+<span class="sd">Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="sd">you may not use this file except in compliance with the License.</span>
+<span class="sd">You may obtain a copy of the License at</span>
+
+<span class="sd">    http://www.apache.org/licenses/LICENSE-2.0</span>
+
+<span class="sd">Unless required by applicable law or agreed to in writing, software</span>
+<span class="sd">distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="sd">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="sd">See the License for the specific language governing permissions and</span>
+<span class="sd">limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.f</span> <span class="k">import</span> <span class="n">oasis</span> <span class="k">as</span> <span class="n">foasis</span>
+<span class="kn">from</span> <span class="nn">.f</span> <span class="k">import</span> <span class="n">types</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="Variable"><a class="viewcode-back" href="../../api/oasis.html#oasis.variable.Variable">[docs]</a><span class="k">class</span> <span class="nc">Variable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Oasis&#39; view of a model variable</span>
+
+<span class="sd">    Should be registered with the Oasis singleton before calling Oasis.enddef()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">partition</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">inout</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a variable</span>
+
+<span class="sd">        Must call `Oasis.register()` on the variable for Oasis to know about it</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">partition</span> <span class="o">=</span> <span class="n">partition</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inout</span> <span class="o">=</span> <span class="n">inout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_register</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">nodims</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">foasis</span><span class="o">.</span><span class="n">def_var</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">partition</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> 
+                <span class="n">nodims</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inout</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="n">foasis</span><span class="o">.</span><span class="n">ok</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Variable &lt;</span><span class="si">%s</span><span class="s2">&gt; not present in namcouple&quot;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Variable.put"><a class="viewcode-back" href="../../api/oasis.html#oasis.variable.Variable.put">[docs]</a>    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">array</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Send data to the coupler. If there is no coupling at this date</span>
+<span class="sd">        according to the namcouple file this function will be a no-op.</span>
+
+<span class="sd">        :param int date: Date at the start of the timestep, in seconds since the model start</span>
+<span class="sd">        :param numpy.Array array: Data array to send (1 or 2D)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">types</span><span class="o">.</span><span class="n">real</span><span class="p">):</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="n">foasis</span><span class="o">.</span><span class="n">put_14</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">types</span><span class="o">.</span><span class="n">double</span><span class="p">):</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="n">foasis</span><span class="o">.</span><span class="n">put_18</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">types</span><span class="o">.</span><span class="n">real</span><span class="p">):</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="n">foasis</span><span class="o">.</span><span class="n">put_24</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">types</span><span class="o">.</span><span class="n">double</span><span class="p">):</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="n">foasis</span><span class="o">.</span><span class="n">put_28</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span>
+
+        <span class="n">info</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">var_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span> <span class="n">fld1</span><span class="o">=</span><span class="n">array</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">info</span></div>
+
+<div class="viewcode-block" id="Variable.get"><a class="viewcode-back" href="../../api/oasis.html#oasis.variable.Variable.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">array</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get data from the coupler. If there is no coupling at this date</span>
+<span class="sd">        according to the namcouple file this function will be a no-op.</span>
+
+<span class="sd">        :param int date: Date at the start of the timestep, in seconds since the model start</span>
+<span class="sd">        :param numpy.Array array: Data array to send (1 or 2D)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">types</span><span class="o">.</span><span class="n">real</span><span class="p">):</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="n">foasis</span><span class="o">.</span><span class="n">get_14</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">types</span><span class="o">.</span><span class="n">double</span><span class="p">):</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="n">foasis</span><span class="o">.</span><span class="n">get_18</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">types</span><span class="o">.</span><span class="n">real</span><span class="p">):</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="n">foasis</span><span class="o">.</span><span class="n">get_24</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">types</span><span class="o">.</span><span class="n">double</span><span class="p">):</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="n">foasis</span><span class="o">.</span><span class="n">get_28</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span>
+
+        <span class="n">info</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">var_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">date</span><span class="o">=</span><span class="n">date</span><span class="p">,</span> <span class="n">fld1</span><span class="o">=</span><span class="n">array</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">info</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Scott Wales.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
